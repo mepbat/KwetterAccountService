@@ -1,9 +1,7 @@
 package fontys.ict.kwetter.KwetterAccountService.controllers;
 
 import fontys.ict.kwetter.KwetterAccountService.models.Account;
-import fontys.ict.kwetter.KwetterAccountService.models.Role;
 import fontys.ict.kwetter.KwetterAccountService.repositories.AccountRepository;
-import fontys.ict.kwetter.KwetterAccountService.repositories.RoleRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,11 +12,9 @@ import java.util.Optional;
 public class AccountController {
 
     private final AccountRepository accountRepository;
-    private final RoleRepository roleRepository;
 
-    public AccountController(AccountRepository accountRepository, RoleRepository roleRepository) {
+    public AccountController(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.roleRepository = roleRepository;
     }
 
     @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
@@ -27,7 +23,7 @@ public class AccountController {
         return accountRepository.findById(accountId);
     }
 
-    @RequestMapping(value = "/{search}", method = RequestMethod.GET)
+    @RequestMapping(value = "/search/{search}", method = RequestMethod.GET)
     public @ResponseBody
     List<Account> getAccountsFromSearch(@PathVariable("search") String search) {
         return accountRepository.getAccountsByNameContains(search);
@@ -52,11 +48,5 @@ public class AccountController {
     @RequestMapping(method = RequestMethod.DELETE, consumes = "application/json")
     public @ResponseBody void deleteAccount(@RequestBody Account account){
         accountRepository.delete(account);
-    }
-
-    @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
-    public @ResponseBody
-    Role getAccountRole(@PathVariable("accountId") Long accountId) {
-        return roleRepository.getRoleByAccount_Id(accountId);
     }
 }

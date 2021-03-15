@@ -15,13 +15,13 @@ public class FollowController {
         this.followRepository = followRepository;
     }
 
-    @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/followers/{accountId}", method = RequestMethod.GET)
     public @ResponseBody
     List<Follow> getFollowers(@PathVariable("accountId") Long accountId) {
         return followRepository.getAllByFollowingAccount_Id(accountId);
     }
 
-    @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/following/{accountId}", method = RequestMethod.GET)
     public @ResponseBody
     List<Follow> getFollowing(@PathVariable("accountId") Long accountId) {
         return followRepository.getAllByAccount_Id(accountId);
