@@ -1,6 +1,7 @@
 package fontys.ict.kwetter.KwetterAccountService.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Role")
@@ -12,16 +13,16 @@ public class Role {
     @Column
     private String name;
 
-    @OneToOne(mappedBy = "role")
-    private Account account;
+    @OneToMany(mappedBy = "role")
+    private List<Account> accounts;
 
     public Role() {
     }
 
-    public Role(Long id, String name, Account account) {
+    public Role(Long id, String name, List<Account> accounts) {
         this.id = id;
         this.name = name;
-        this.account = account;
+        this.accounts = accounts;
     }
 
     public Long getId() {
@@ -40,11 +41,11 @@ public class Role {
         this.name = name;
     }
 
-    public Account getAccount() {
-        return account;
+    public List<Account> getAccounts() {
+        return accounts;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 }

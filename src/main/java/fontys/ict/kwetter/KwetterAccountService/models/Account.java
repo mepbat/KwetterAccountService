@@ -7,7 +7,7 @@ import java.util.List;
 @Table(name = "Account")
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Long id;
 
     @Column
@@ -21,7 +21,7 @@ public class Account {
     @Column
     private String web;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
