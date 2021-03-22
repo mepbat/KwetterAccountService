@@ -21,10 +21,6 @@ public class Account {
     @Column
     private String web;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
-    private Role role;
-
     @OneToMany(mappedBy = "account")
     private List<Follow> following;
 
@@ -34,14 +30,13 @@ public class Account {
     public Account() {
     }
 
-    public Account(Long id, String name, String photo, String bio, String location, String web, Role role, List<Follow> following, List<Follow> followers) {
+    public Account(Long id, String name, String photo, String bio, String location, String web, List<Follow> following, List<Follow> followers) {
         this.id = id;
         this.name = name;
         this.photo = photo;
         this.bio = bio;
         this.location = location;
         this.web = web;
-        this.role = role;
         this.following = following;
         this.followers = followers;
     }
@@ -92,14 +87,6 @@ public class Account {
 
     public void setWeb(String web) {
         this.web = web;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public List<Follow> getFollowing() {
