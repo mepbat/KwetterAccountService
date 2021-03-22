@@ -2,6 +2,8 @@ package fontys.ict.kwetter.KwetterAccountService.controllers;
 
 import fontys.ict.kwetter.KwetterAccountService.models.Account;
 import fontys.ict.kwetter.KwetterAccountService.repositories.AccountRepository;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +15,16 @@ import java.util.Optional;
 public class AccountController {
 
     private final AccountRepository accountRepository;
+    private final AmqpTemplate rabbitTemplate;
 
-    public AccountController(AccountRepository accountRepository) {
+    @Value("${rabbitmq.exchange}")
+    private String exchange;
+    @Value("${rabbitmq.routingKey}")
+    private String routingkey;
+
+    public AccountController(AccountRepository accountRepository, AmqpTemplate rabbitTemplate) {
         this.accountRepository = accountRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)

@@ -2,6 +2,8 @@ package fontys.ict.kwetter.KwetterAccountService.controllers;
 
 import fontys.ict.kwetter.KwetterAccountService.models.Follow;
 import fontys.ict.kwetter.KwetterAccountService.repositories.FollowRepository;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,9 +13,17 @@ import java.util.List;
 @RequestMapping(value = "/follow")
 public class FollowController {
     private final FollowRepository followRepository;
+    private final AmqpTemplate rabbitTemplate;
 
-    public FollowController(FollowRepository followRepository) {
+    @Value("${rabbitmq.exchange}")
+    private String exchange;
+    @Value("${rabbitmq.routingKey}")
+    private String routingkey;
+
+
+    public FollowController(FollowRepository followRepository, AmqpTemplate rabbitTemplate) {
         this.followRepository = followRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @RequestMapping(value = "/followers/{accountId}", method = RequestMethod.GET)
