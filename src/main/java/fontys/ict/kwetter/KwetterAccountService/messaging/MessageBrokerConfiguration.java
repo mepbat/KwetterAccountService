@@ -5,6 +5,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +20,9 @@ public class MessageBrokerConfiguration {
     @Value("${rabbitmq.routingKey}")
     private String routingKey;
 
-    @Bean
-    public Queue queue() {
-        return new Queue(queueName);
+    @Bean("create-account-queue")
+    public Queue createAccountQueue() {
+        return new Queue("create-account-queue");
     }
 
     @Bean
@@ -30,8 +31,8 @@ public class MessageBrokerConfiguration {
     }
 
     @Bean
-    Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+    Binding createAccountBinding(@Qualifier("create-account-queue") Queue queue, DirectExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with("create-account");
     }
 
     @Bean
