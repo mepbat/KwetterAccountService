@@ -36,7 +36,7 @@ public class EventReceiver {
         CreateAccountEvent event = gson.fromJson(json, CreateAccountEvent.class);
         Account acc = new Account();
         acc.setId(event.getId());
-        acc.setName(event.getUsername());
+        acc.setUsername(event.getUsername());
         accountRepository.save(acc);
     }
 }

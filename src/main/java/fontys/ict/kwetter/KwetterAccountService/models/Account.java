@@ -11,7 +11,7 @@ public class Account {
     private Long id;
 
     @Column
-    private String name;
+    private String username;
     @Column
     private String photo;
     @Column
@@ -30,9 +30,9 @@ public class Account {
     public Account() {
     }
 
-    public Account(Long id, String name, String photo, String bio, String location, String web, List<Follow> following, List<Follow> followers) {
+    public Account(Long id, String username, String photo, String bio, String location, String web, List<Follow> following, List<Follow> followers) {
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.photo = photo;
         this.bio = bio;
         this.location = location;
@@ -49,12 +49,12 @@ public class Account {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String name) {
+        this.username = name;
     }
 
     public String getPhoto() {

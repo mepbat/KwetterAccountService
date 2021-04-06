@@ -4,13 +4,14 @@ import fontys.ict.kwetter.KwetterAccountService.models.Account;
 import fontys.ict.kwetter.KwetterAccountService.repositories.AccountRepository;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200","http://localhost:8081","http://localhost:8082","http://localhost:8083"})
 @RequestMapping(value = "/account")
 public class AccountController {
 
@@ -33,10 +34,16 @@ public class AccountController {
         return accountRepository.findById(accountId);
     }
 
+    @RequestMapping(value = "/getAccountByUsername/{username}", method = RequestMethod.GET)
+    public @ResponseBody
+    Optional<Account> getAccountByUsername(@PathVariable("username") String username) {
+        return accountRepository.getAccountByUsername(username);
+    }
+
     @RequestMapping(value = "/search/{search}", method = RequestMethod.GET)
     public @ResponseBody
     List<Account> getAccountsFromSearch(@PathVariable("search") String search) {
-        return accountRepository.getAccountsByNameContains(search);
+        return accountRepository.getAccountsByUsernameContains(search);
     }
 
     @RequestMapping(method = RequestMethod.GET)
