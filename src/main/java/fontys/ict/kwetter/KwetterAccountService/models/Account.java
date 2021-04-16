@@ -24,11 +24,17 @@ public class Account {
     @Column
     private String web;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Follow> following;
 
-    @OneToMany(mappedBy = "followingAccount", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "followingAccount", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Follow> followers;
+
+/*    @PreRemove
+    private void removeChildren(){
+        this.following = null;
+        this.followers = null;
+    }*/
 
     public Account() {
     }

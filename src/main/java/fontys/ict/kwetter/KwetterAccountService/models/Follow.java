@@ -13,13 +13,22 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "following_account_id", nullable = false)
     private Account followingAccount;
+
+    @PreRemove
+    private void removeChildren(){
+        this.account.setFollowers(null);
+        this.account.setFollowing(null);
+        this.followingAccount.setFollowers(null);
+        this.followingAccount.setFollowing(null);
+
+    }
 
     public Follow() {
     }

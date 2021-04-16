@@ -41,28 +41,35 @@ public class FollowController {
         this.gson = initiateGson();
     }
 
-    @RequestMapping(value = "/followers/{accountId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/isFollowing/{accountId}/{followingAccountId}", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    List<Follow> getFollowers(@PathVariable("accountId") Long accountId) {
-        return followRepository.getAllByFollowingAccount_Id(accountId);
+    boolean isFollowing(@PathVariable("accountId") Long accountId, @PathVariable("followingAccountId") Long followingAccountId) {
+        return followRepository.existsFollowByAccountIdAndFollowingAccountId(accountId, followingAccountId);
+    }
+
+    @RequestMapping(value = "/followers/{accountId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getFollowers(@PathVariable("accountId") Long accountId) {
+        return new ResponseEntity<>(this.gson.toJson(followRepository.getAllByFollowingAccount_Id(accountId)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/following/{accountId}", method = RequestMethod.GET)
-    public @ResponseBody
-    List<Follow> getFollowing(@PathVariable("accountId") Long accountId) {
-        return followRepository.getAllByAccount_Id(accountId);
+    public ResponseEntity<?> getFollowing(@PathVariable("accountId") Long accountId) {
+        return new ResponseEntity<>(this.gson.toJson(followRepository.getAllByAccount_Id(accountId)), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<?> follow(@RequestBody FollowDto followdto) {
         System.out.println(followdto);
         Follow follow = new Follow();
+        if (followRepository.existsFollowByAccountIdAndFollowingAccountId((long) followdto.getAccountId(), (long) followdto.getFollowingAccountId())) {
+            return new ResponseEntity<>("Already followed", HttpStatus.CONFLICT);
+        }
         Optional<Account> account = accountRepository.findAccountById((long) followdto.getAccountId());
-        if(account.isEmpty()){
+        if (account.isEmpty()) {
             return new ResponseEntity<>("Account not found", HttpStatus.BAD_REQUEST);
         }
         Optional<Account> followAccount = accountRepository.findAccountById((long) followdto.getFollowingAccountId());
-        if(followAccount.isEmpty()){
+        if (followAccount.isEmpty()) {
             return new ResponseEntity<>("Follow Account not found", HttpStatus.BAD_REQUEST);
         }
         follow.setAccount(account.get());
@@ -70,14 +77,18 @@ public class FollowController {
         return new ResponseEntity<>(this.gson.toJson(followRepository.save(follow)), HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, consumes = "application/json", produces = "application/json")
+    @RequestMapping(value = "/unfollow", method = RequestMethod.POST, consumes = "application/json", produces = "text/plain")
     public ResponseEntity<?> unfollow(@RequestBody FollowDto followdto) {
-        Optional<Follow> follow = followRepository.findById((long) followdto.getId());
-        if(follow.isEmpty()){
+        Optional<Follow> follow = followRepository.findByAccountIdAndFollowingAccountId((long) followdto.getAccountId(), (long) followdto.getFollowingAccountId());
+        if (follow.isEmpty()) {
             return new ResponseEntity<>("Follow not found", HttpStatus.BAD_REQUEST);
         }
-        followRepository.delete(follow.get());
-        return new ResponseEntity<>("Unfollow succeeded", HttpStatus.OK);
+        try {
+            followRepository.deleteById(follow.get().getId());
+            return new ResponseEntity<>("Unfollow succeeded", HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Could not unfollow" + ex, HttpStatus.BAD_REQUEST);
+        }
     }
 
     private Gson initiateGson() {
