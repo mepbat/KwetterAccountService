@@ -1,5 +1,8 @@
 package fontys.ict.kwetter.KwetterAccountService.models;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -21,10 +24,10 @@ public class Account {
     @Column
     private String web;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Follow> following;
 
-    @OneToMany(mappedBy = "followingAccount")
+    @OneToMany(mappedBy = "followingAccount", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Follow> followers;
 
     public Account() {
