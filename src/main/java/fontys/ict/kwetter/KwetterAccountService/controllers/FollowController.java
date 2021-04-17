@@ -4,6 +4,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jayway.jsonpath.JsonPath;
 import fontys.ict.kwetter.KwetterAccountService.models.Account;
 import fontys.ict.kwetter.KwetterAccountService.models.Follow;
 import fontys.ict.kwetter.KwetterAccountService.models.FollowDto;
@@ -47,14 +48,18 @@ public class FollowController {
         return followRepository.existsFollowByAccountIdAndFollowingAccountId(accountId, followingAccountId);
     }
 
-    @RequestMapping(value = "/followers/{accountId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/followers/{accountId}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getFollowers(@PathVariable("accountId") Long accountId) {
-        return new ResponseEntity<>(this.gson.toJson(followRepository.getAllByFollowingAccount_Id(accountId)), HttpStatus.OK);
+        String json = this.gson.toJson(followRepository.getAllByFollowingAccount_Id(accountId));
+        List<Account> accounts = JsonPath.read(json, "$..account");
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/following/{accountId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/following/{accountId}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getFollowing(@PathVariable("accountId") Long accountId) {
-        return new ResponseEntity<>(this.gson.toJson(followRepository.getAllByAccount_Id(accountId)), HttpStatus.OK);
+        String json = this.gson.toJson(followRepository.getAllByAccount_Id(accountId));
+        List<Account> accounts = JsonPath.read(json, "$..followingAccount");
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
