@@ -1,4 +1,4 @@
-package fontys.ict.kwetter.KwetterAccountService.models;
+package fontys.ict.kwetter.KwetterAccountService.models.dto;
 
 public class FollowDto {
     private int id;

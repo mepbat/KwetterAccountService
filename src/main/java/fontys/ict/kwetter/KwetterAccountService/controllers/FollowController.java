@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.jayway.jsonpath.JsonPath;
 import fontys.ict.kwetter.KwetterAccountService.models.Account;
 import fontys.ict.kwetter.KwetterAccountService.models.Follow;
-import fontys.ict.kwetter.KwetterAccountService.models.FollowDto;
+import fontys.ict.kwetter.KwetterAccountService.models.dto.FollowDto;
 import fontys.ict.kwetter.KwetterAccountService.models.HibernateProxyTypeAdapter;
 import fontys.ict.kwetter.KwetterAccountService.repositories.AccountRepository;
 import fontys.ict.kwetter.KwetterAccountService.repositories.FollowRepository;

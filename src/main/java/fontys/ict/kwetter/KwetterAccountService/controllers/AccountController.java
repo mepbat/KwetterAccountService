@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import fontys.ict.kwetter.KwetterAccountService.models.Account;
 import fontys.ict.kwetter.KwetterAccountService.models.Follow;
 import fontys.ict.kwetter.KwetterAccountService.models.HibernateProxyTypeAdapter;
+import fontys.ict.kwetter.KwetterAccountService.models.dto.AccountDto;
 import fontys.ict.kwetter.KwetterAccountService.repositories.AccountRepository;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,9 +76,9 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public @ResponseBody
-    Account updateAccount(@RequestBody Account account) {
-        return accountRepository.save(account);
+    public ResponseEntity<?> updateAccount(@RequestBody AccountDto accountDto) {
+        Account account = new Account(accountDto);
+        return new ResponseEntity<>(gson.toJson(accountRepository.save(account)), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, consumes = "application/json")

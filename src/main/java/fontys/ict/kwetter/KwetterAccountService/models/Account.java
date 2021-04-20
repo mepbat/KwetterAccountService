@@ -2,6 +2,7 @@ package fontys.ict.kwetter.KwetterAccountService.models;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import fontys.ict.kwetter.KwetterAccountService.models.dto.AccountDto;
 
 import javax.persistence.*;
 import java.util.List;
@@ -48,6 +49,14 @@ public class Account {
         this.web = web;
         this.following = following;
         this.followers = followers;
+    }
+
+    public Account(AccountDto dto) {
+        this.id = dto.getId();
+        this.username = dto.getUsername();
+        this.location = dto.getLocation();
+        this.web = dto.getWeb();
+        this.bio = dto.getBio();
     }
 
     public Long getId() {
@@ -112,5 +121,19 @@ public class Account {
 
     public void setFollowers(List<Follow> followers) {
         this.followers = followers;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", photo='" + photo + '\'' +
+                ", bio='" + bio + '\'' +
+                ", location='" + location + '\'' +
+                ", web='" + web + '\'' +
+                ", following=" + following +
+                ", followers=" + followers +
+                '}';
     }
 }
