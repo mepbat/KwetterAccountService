@@ -58,15 +58,13 @@ public class AccountController {
     }
 
     @RequestMapping(value = "/search/{search}", method = RequestMethod.GET)
-    public @ResponseBody
-    List<Account> getAccountsFromSearch(@PathVariable("search") String search) {
-        return accountRepository.findAccountsByUsernameContains(search);
+    public ResponseEntity<?> getAccountsFromSearch(@PathVariable("search") String search) {
+        return new ResponseEntity<>(gson.toJson(accountRepository.findTop10AccountsByUsernameContains(search)), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody
-    List<Account> getAll() {
-        return accountRepository.findAll();
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(gson.toJson(accountRepository.findAll()), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

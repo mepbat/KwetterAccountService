@@ -2,6 +2,7 @@ package fontys.ict.kwetter.KwetterAccountService.models.dto;
 
 public class AccountDto {
     private Long id;
+    private boolean active;
     private String username;
     private String photo;
     private String location;
@@ -11,8 +12,9 @@ public class AccountDto {
     public AccountDto() {
     }
 
-    public AccountDto(Long id, String username, String photo, String location, String web, String bio) {
+    public AccountDto(Long id, boolean active, String username, String photo, String location, String web, String bio) {
         this.id = id;
+        this.active = active;
         this.username = username;
         this.photo = photo;
         this.location = location;
@@ -26,6 +28,14 @@ public class AccountDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public String getUsername() {

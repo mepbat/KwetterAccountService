@@ -1,7 +1,5 @@
 package fontys.ict.kwetter.KwetterAccountService.models;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import fontys.ict.kwetter.KwetterAccountService.models.dto.AccountDto;
 
 import javax.persistence.*;
@@ -13,6 +11,9 @@ public class Account {
     @Id
     @Column
     private Long id;
+
+    @Column
+    private boolean active;
 
     @Column
     private String username;
@@ -40,8 +41,9 @@ public class Account {
     public Account() {
     }
 
-    public Account(Long id, String username, String photo, String bio, String location, String web, List<Follow> following, List<Follow> followers) {
+    public Account(Long id, boolean active, String username, String photo, String bio, String location, String web, List<Follow> following, List<Follow> followers) {
         this.id = id;
+        this.active = active;
         this.username = username;
         this.photo = photo;
         this.bio = bio;
@@ -65,6 +67,14 @@ public class Account {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public String getUsername() {

@@ -37,6 +37,7 @@ public class EventReceiver {
         Account acc = new Account();
         acc.setId(event.getId());
         acc.setUsername(event.getUsername());
+        acc.setActive(true);
         accountRepository.save(acc);
     }
 }

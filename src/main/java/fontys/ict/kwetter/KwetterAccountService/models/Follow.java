@@ -27,7 +27,6 @@ public class Follow {
         this.account.setFollowing(null);
         this.followingAccount.setFollowers(null);
         this.followingAccount.setFollowing(null);
-
     }
 
     public Follow() {
