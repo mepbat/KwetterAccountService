@@ -68,7 +68,8 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> createAccount(@RequestBody Account account) {
+    public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto) {
+        Account account = new Account(accountDto);
         return new ResponseEntity<>(gson.toJson(accountRepository.save(account)),HttpStatus.CREATED);
     }
 
