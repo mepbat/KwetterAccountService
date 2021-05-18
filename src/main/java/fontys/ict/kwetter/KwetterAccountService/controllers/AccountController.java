@@ -67,13 +67,12 @@ public class AccountController {
         return new ResponseEntity<>(gson.toJson(accountRepository.findAll()), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public @ResponseBody
-    Account createAccount(@RequestBody Account account) {
-        return accountRepository.save(account);
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> createAccount(@RequestBody Account account) {
+        return new ResponseEntity<>(gson.toJson(accountRepository.save(account)),HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> updateAccount(@RequestBody AccountDto accountDto) {
         Account account = new Account(accountDto);
         return new ResponseEntity<>(gson.toJson(accountRepository.save(account)), HttpStatus.OK);

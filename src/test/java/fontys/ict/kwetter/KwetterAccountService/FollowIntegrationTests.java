@@ -1,9 +1,11 @@
 package fontys.ict.kwetter.KwetterAccountService;
 
 import com.google.gson.Gson;
-import fontys.ict.kwetter.KwetterAccountService.controllers.AccountController;
+import fontys.ict.kwetter.KwetterAccountService.controllers.FollowController;
 import fontys.ict.kwetter.KwetterAccountService.models.Account;
+import fontys.ict.kwetter.KwetterAccountService.models.Follow;
 import fontys.ict.kwetter.KwetterAccountService.repositories.AccountRepository;
+import fontys.ict.kwetter.KwetterAccountService.repositories.FollowRepository;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -19,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -27,14 +28,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = KwetterAccountServiceApplication.class)
-@WebMvcTest(AccountController.class)
-class AccountIntegrationTests {
-
+@WebMvcTest(FollowController.class)
+public class FollowIntegrationTests {
     @Autowired
     private MockMvc mvc;
 
     @MockBean
+    private FollowRepository followRepository;
+
+    @MockBean
     private AccountRepository accountRepository;
+
     @MockBean
     private AmqpTemplate rabbitTemplate;
 
@@ -47,18 +51,20 @@ class AccountIntegrationTests {
 
     @Test
     public void contextLoads() {
+        assertThat(followRepository).isNotNull();
         assertThat(accountRepository).isNotNull();
     }
 
     @Test
-    public void getAllAccountsAPI() throws Exception {
+    public void getFollowingAPI() throws Exception {
         Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
-        List<Account> allAccounts = new ArrayList<>();
-        allAccounts.add(account1);
-
-        given(accountRepository.findAll()).willReturn(allAccounts);
+        Account account2 = new Account(1L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
+        Follow follow = new Follow(0L, account1,account2);
+        List<Follow> follows = new ArrayList<>();
+        follows.add(follow);
+        given(followRepository.getAllByAccount_Id(1L)).willReturn(follows);
         mvc.perform(MockMvcRequestBuilders
-                .get("/account")
+                .get("/follow/following/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -66,53 +72,18 @@ class AccountIntegrationTests {
     }
 
     @Test
-    public void getAccountAPI() throws Exception {
+    public void getFollowersAPI() throws Exception {
         Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
-
-        given(accountRepository.findAccountById(0L)).willReturn(Optional.of(account1));
+        Account account2 = new Account(1L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
+        Follow follow = new Follow(0L, account1,account2);
+        List<Follow> follows = new ArrayList<>();
+        follows.add(follow);
+        given(followRepository.getAllByFollowingAccount_Id(1L)).willReturn(follows);
         mvc.perform(MockMvcRequestBuilders
-                .get("/account/0")
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty());
-    }
-
-    @Test
-    public void getAccountByUsernameAPI() throws Exception {
-        Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
-
-        given(accountRepository.findAccountByUsername("test")).willReturn(Optional.of(account1));
-        mvc.perform(MockMvcRequestBuilders
-                .get("/account/getAccountByUsername/test")
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty());
-    }
-
-    @Test
-    public void searchAccountsAPI() throws Exception {
-        Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
-        List<Account> accounts = new ArrayList<>();
-        accounts.add(account1);
-        given(accountRepository.findTop10AccountsByUsernameContains("test")).willReturn(accounts);
-        mvc.perform(MockMvcRequestBuilders
-                .get("/account/search/test")
+                .get("/follow/followers/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].id").isNotEmpty());
     }
-
-/*    @Test
-    public void createAccountAPI() throws Exception {
-        Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
-        given(accountRepository.save(account1)).willReturn(account1);
-        mvc.perform(MockMvcRequestBuilders
-                .post("/account").content(gson.toJson(account1)))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty());
-    }*/
 }
