@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AccountController.class)
 class AccountIntegrationTests {
 
-    @Autowired
+/*    @Autowired
     private MockMvc mvc;
 
     @MockBean
@@ -103,7 +103,7 @@ class AccountIntegrationTests {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].id").isNotEmpty());
-    }
+    }*/
 
 /*    @Test
     public void createAccountAPI() throws Exception {
