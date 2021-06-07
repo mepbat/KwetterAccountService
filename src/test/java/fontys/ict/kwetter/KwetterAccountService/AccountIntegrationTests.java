@@ -1,6 +1,10 @@
 package fontys.ict.kwetter.KwetterAccountService;
 
 import com.google.gson.Gson;
+import fontys.ict.kwetter.KwetterAccountService.config.JwtAuthenticationEntryPoint;
+import fontys.ict.kwetter.KwetterAccountService.config.JwtRequestFilter;
+import fontys.ict.kwetter.KwetterAccountService.config.JwtTokenUtil;
+import fontys.ict.kwetter.KwetterAccountService.config.WebSecurityConfig;
 import fontys.ict.kwetter.KwetterAccountService.controllers.AccountController;
 import fontys.ict.kwetter.KwetterAccountService.models.Account;
 import fontys.ict.kwetter.KwetterAccountService.repositories.AccountRepository;
@@ -12,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -28,15 +33,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ContextConfiguration(classes = KwetterAccountServiceApplication.class)
 @WebMvcTest(AccountController.class)
-class AccountIntegrationTests {
+    class AccountIntegrationTests {
 
-/*    @Autowired
+    @Autowired
     private MockMvc mvc;
-
     @MockBean
     private AccountRepository accountRepository;
     @MockBean
     private AmqpTemplate rabbitTemplate;
+    @MockBean
+    private WebSecurityConfiguration webSecurityConfiguration;
+    @MockBean
+    private JwtRequestFilter jwtRequestFilter;
+    @MockBean
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @MockBean
+    private WebSecurityConfig webSecurityConfig;
 
     private final Gson gson = new Gson();
 
@@ -48,6 +60,11 @@ class AccountIntegrationTests {
     @Test
     public void contextLoads() {
         assertThat(accountRepository).isNotNull();
+        assertThat(webSecurityConfiguration).isNotNull();
+        assertThat(webSecurityConfig).isNotNull();
+        assertThat(jwtRequestFilter).isNotNull();
+        assertThat(jwtAuthenticationEntryPoint).isNotNull();
+
     }
 
     @Test
@@ -103,9 +120,9 @@ class AccountIntegrationTests {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].id").isNotEmpty());
-    }*/
+    }
 
-/*    @Test
+    @Test
     public void createAccountAPI() throws Exception {
         Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
         given(accountRepository.save(account1)).willReturn(account1);
@@ -114,5 +131,5 @@ class AccountIntegrationTests {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty());
-    }*/
+    }
 }

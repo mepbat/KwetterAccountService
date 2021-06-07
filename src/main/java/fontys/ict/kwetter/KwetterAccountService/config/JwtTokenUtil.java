@@ -25,10 +25,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String getRoleFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims = getAllClaimsFromToken(token);
         return claims.get("role", String.class);
     }
 
