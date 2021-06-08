@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import fontys.ict.kwetter.KwetterAccountService.config.JwtAuthenticationEntryPoint;
 import fontys.ict.kwetter.KwetterAccountService.config.JwtRequestFilter;
 import fontys.ict.kwetter.KwetterAccountService.config.JwtTokenUtil;
-import fontys.ict.kwetter.KwetterAccountService.config.WebSecurityConfig;
+import fontys.ict.kwetter.KwetterAccountService.config.WebSecurityConfiguration;
 import fontys.ict.kwetter.KwetterAccountService.controllers.AccountController;
 import fontys.ict.kwetter.KwetterAccountService.models.Account;
 import fontys.ict.kwetter.KwetterAccountService.repositories.AccountRepository;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,14 +42,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     private AccountRepository accountRepository;
     @MockBean
     private AmqpTemplate rabbitTemplate;
-    @MockBean
+    @Autowired
     private WebSecurityConfiguration webSecurityConfiguration;
     @MockBean
-    private JwtRequestFilter jwtRequestFilter;
+    private JwtTokenUtil jwtTokenUtil;
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    @MockBean
-    private WebSecurityConfig webSecurityConfig;
 
     private final Gson gson = new Gson();
 
@@ -61,14 +60,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     public void contextLoads() {
         assertThat(accountRepository).isNotNull();
         assertThat(webSecurityConfiguration).isNotNull();
-        assertThat(webSecurityConfig).isNotNull();
-        assertThat(jwtRequestFilter).isNotNull();
         assertThat(jwtAuthenticationEntryPoint).isNotNull();
+        assertThat(jwtTokenUtil).isNotNull();
 
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "admin")
     public void getAllAccountsAPI() throws Exception {
+
         Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
         List<Account> allAccounts = new ArrayList<>();
         allAccounts.add(account1);
@@ -83,6 +83,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "admin")
     public void getAccountAPI() throws Exception {
         Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
 
@@ -96,6 +97,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "admin")
     public void getAccountByUsernameAPI() throws Exception {
         Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
 
@@ -109,6 +111,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "admin")
     public void searchAccountsAPI() throws Exception {
         Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
         List<Account> accounts = new ArrayList<>();
@@ -123,11 +126,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "admin")
     public void createAccountAPI() throws Exception {
         Account account1 = new Account(0L,false,"test",null,"bio","location","web",new ArrayList<>(), new ArrayList<>());
-        given(accountRepository.save(account1)).willReturn(account1);
+        given(accountRepository.save(any())).willReturn(account1);
         mvc.perform(MockMvcRequestBuilders
-                .post("/account").content(gson.toJson(account1)))
+                .post("/account").content(gson.toJson(account1))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty());

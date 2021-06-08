@@ -40,7 +40,7 @@ public class AccountController {
         this.gson = initiateGson();
     }
 
-    @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
+    @GetMapping(value = "/{accountId}", produces = "application/json")
     public ResponseEntity<?> getAccount(@PathVariable("accountId") Long accountId) {
         Optional<Account> account = accountRepository.findAccountById(accountId);
         if (account.isEmpty()) {
@@ -49,7 +49,7 @@ public class AccountController {
         return new ResponseEntity<>(gson.toJson(account.get()), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getAccountByUsername/{username}", method = RequestMethod.GET)
+    @GetMapping(value = "/getAccountByUsername/{username}", produces = "application/json")
     public ResponseEntity<?> getAccountByUsername(@PathVariable("username") String username) {
         Optional<Account> account = accountRepository.findAccountByUsername(username);
         if (account.isEmpty()) {
@@ -58,23 +58,23 @@ public class AccountController {
         return new ResponseEntity<>(gson.toJson(account.get()), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/search/{search}", method = RequestMethod.GET)
+    @GetMapping(value = "/search/{search}", produces = "application/json")
     public ResponseEntity<?> getAccountsFromSearch(@PathVariable("search") String search) {
         return new ResponseEntity<>(gson.toJson(accountRepository.findTop10AccountsByUsernameContains(search)), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(produces = "application/json")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(gson.toJson(accountRepository.findAll()), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping(produces = "application/json")
     public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto) {
         Account account = new Account(accountDto);
         return new ResponseEntity<>(gson.toJson(accountRepository.save(account)),HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @PutMapping(produces = "application/json")
     public ResponseEntity<?> updateAccount(@RequestBody AccountDto accountDto) {
         Account account = new Account(accountDto);
         return new ResponseEntity<>(gson.toJson(accountRepository.save(account)), HttpStatus.OK);
