@@ -17,7 +17,7 @@ pipeline {
       }
       stage('Docker Build and Tag') {
         steps {
-            sh 'docker build -t kwetter-account-service:latest'
+            sh 'docker build -t kwetter-account-service:latest .'
             sh 'docker tag kwetter-account-service kwetter-account-service:latest'
             sh 'docker tag kwetter-account-service kwetter-account-service:$BUILD_NUMBER'
         }
