@@ -12,7 +12,7 @@ pipeline {
       }
       stage('SonarQube analysis') {
         steps {
-            sh 'mvn clean package sonar:sonar -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=2acda40194236facad9e62771a0ebe7d99f57f16'
+            sh 'mvn clean package sonar:sonar -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=c3b2b407fd5ab3cdabd0b6765b84ec5c6c93e726'
         }
       }
       stage('Docker Build and Tag') {
