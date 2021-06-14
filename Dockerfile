@@ -1,5 +1,4 @@
-FROM openjdk:16
-EXPOSE 8080
-ARG JAR_FILE=target/kwetter-account-service-0.0.1-SNAPSHOT.jar
-ADD ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+FROM jenkins
+USER root
+RUN apt-get update && apt-get install -y docker.io 238 && rm -rf /var/lib/apt/lists/*
+user jenkins
