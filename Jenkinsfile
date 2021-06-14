@@ -22,6 +22,8 @@ pipeline {
       }
       stage('Building our image') {
         steps {
+                sh 'ECHO $(whoami)'
+                sh 'ECHO $USER'
           script {
             dockerImage = docker.build registry + ":$BUILD_NUMBER"
           }
@@ -29,8 +31,6 @@ pipeline {
       }
       stage('Deploy our image') {
         steps {
-        sh 'ECHO $(whoami)'
-        sh 'ECHO $USER'
           script {
             docker.withRegistry( '', registryCredential ) {
               dockerImage.push()
