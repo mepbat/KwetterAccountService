@@ -1,13 +1,13 @@
 pipeline {
-    environment {
-        registry = "i383656/kwetter-account-service"
-        registryCredential = '372a3c4a-f903-4f24-8a97-1a27afc08275'
-        dockerImage = ''
-    }
   agent any
   tools {
     maven 'maven 3.6.3'
     jdk 'jdk-11'
+  }
+  environment {
+    registry = "i383656/kwetter-account-service"
+    registryCredential = '372a3c4a-f903-4f24-8a97-1a27afc08275'
+    dockerImage = ''
   }
   stages {
       stage('run test') {
