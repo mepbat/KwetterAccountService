@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "i383656/kwetter-account-service"
-        registryCredential = 'ae42a087-e88f-48a9-a10f-9eec499e6f00'
+        registryCredential = '372a3c4a-f903-4f24-8a97-1a27afc08275'
         dockerImage = ''
     }
   agent any
