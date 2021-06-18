@@ -12,25 +12,25 @@ pipeline {
   stages {
       stage('run test') {
         steps {
-            sh 'mvn test'
+            bat 'mvn test'
         }
       }
       stage('Building our image') {
         steps {
-           sh 'mvn clean package spring-boot:build-image'
+           bat 'mvn clean package spring-boot:build-image'
         }
       }
       stage('Publish image to Docker Hub') {
         steps {
           withDockerRegistry([ credentialsId: "70910a1b-9021-44fc-8b9e-a829bc978392", url: "" ]) {
-            sh 'docker tag $registry:0.0.1-SNAPSHOT i383656/kwetter-account-service'
-            sh  'docker push i383656/kwetter-account-service'
+            bat 'docker tag $registry:0.0.1-SNAPSHOT i383656/kwetter-account-service'
+            bat 'docker push i383656/kwetter-account-service'
           }
         }
       }      
       stage('Cleaning up') {
         steps {
-          sh "docker rmi i383656/kwetter-account-service"
+          bat "docker rmi i383656/kwetter-account-service"
         }
       }
   }
