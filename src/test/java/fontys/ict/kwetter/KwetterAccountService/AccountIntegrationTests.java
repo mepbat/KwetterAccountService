@@ -62,7 +62,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         assertThat(webSecurityConfiguration).isNotNull();
         assertThat(jwtAuthenticationEntryPoint).isNotNull();
         assertThat(jwtTokenUtil).isNotNull();
-
     }
 
     @Test
